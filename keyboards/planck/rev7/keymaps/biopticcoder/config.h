@@ -24,6 +24,15 @@
         { SONG(QWERTY_SOUND), SONG(COLEMAK_SOUND), SONG(DVORAK_SOUND) }
 #endif
 
+// Mod-Tap Configuration
+#define TAPPING_TERM 200
+#define TAPPING_FORCE_HOLD
+#define PERMISSIVE_HOLD
+
+// Bootmagic Configuration
+#define BOOTMAGIC_KEY_SALT KC_SPACE
+#define BOOTMAGIC_KEY_SWAP_LCTL_LGUI KC_Z  // Use Z to toggle between Mac/PC mode during boot
+
 /*
  * MIDI options
  */
