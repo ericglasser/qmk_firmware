@@ -236,56 +236,52 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif
 
     uint16_t mod_key = is_mac ? KC_LGUI : KC_LCTL;
-    
+
     switch (keycode) {
         case UNDO_KEY:
-            if (record->event.pressed) {
-                if (record->tap.count && !record->tap.interrupted) {
-                    register_code16(KC_Z);
-                } else {
-                    register_code(mod_key);
-                    register_code(KC_Z);
-                }
-            } else {
-                unregister_code16(KC_Z);
-                unregister_code(mod_key);
-            }
-            return false;
         case CUT_KEY:
-            if (record->event.pressed) {
-                if (record->tap.count && !record->tap.interrupted) {
-                    register_code16(KC_X);
-                } else {
-                    register_code(mod_key);
-                    register_code(KC_X);
-                }
-            } else {
-                unregister_code16(KC_X);
-                unregister_code(mod_key);
-            }
-            return false;
         case COPY_KEY:
-            if (record->event.pressed) {
-                if (record->tap.count && !record->tap.interrupted) {
-                    register_code16(KC_C);
-                } else {
-                    register_code(mod_key);
-                    register_code(KC_C);
-                }
-            } else {
-                unregister_code16(KC_C);
-                unregister_code(mod_key);
-            }
-            return false;
         case PASTE_KEY:
             if (record->event.pressed) {
                 if (record->tap.count && !record->tap.interrupted) {
-                    register_code16(KC_V);
+                    // Handle tap action
+                    switch (keycode) {
+                        case UNDO_KEY:
+                            register_code16(KC_Z);
+                            break;
+                        case CUT_KEY:
+                            register_code16(KC_X);
+                            break;
+                        case COPY_KEY:
+                            register_code16(KC_C);
+                            break;
+                        case PASTE_KEY:
+                            register_code16(KC_V);
+                            break;
+                    }
                 } else {
+                    // Handle hold action (modifier + key)
                     register_code(mod_key);
-                    register_code(KC_V);
+                    switch (keycode) {
+                        case UNDO_KEY:
+                            register_code16(KC_Z);
+                            break;
+                        case CUT_KEY:
+                            register_code16(KC_X);
+                            break;
+                        case COPY_KEY:
+                            register_code16(KC_C);
+                            break;
+                        case PASTE_KEY:
+                            register_code16(KC_V);
+                            break;
+                    }
                 }
             } else {
+                // Unregister codes
+                unregister_code16(KC_Z);
+                unregister_code16(KC_X);
+                unregister_code16(KC_C);
                 unregister_code16(KC_V);
                 unregister_code(mod_key);
             }
