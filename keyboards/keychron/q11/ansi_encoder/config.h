@@ -18,3 +18,5 @@
 
 /* Enable caps-lock LED */
 #define CAPS_LOCK_LED_INDEX 23
+
+// DIP_SWITCH_PINS removed; defined in keyboard.json instead

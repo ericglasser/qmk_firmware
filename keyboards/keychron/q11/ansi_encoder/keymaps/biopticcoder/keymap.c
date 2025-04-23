@@ -125,32 +125,37 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     uint8_t layer = biton32(layer_state);
     switch (layer) {
         case MAC_BASE:
-            for (uint8_t i = led_min; i < led_max; i++) {
-                RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 127);
-            }
-            // F key (LED index 27) and J key (LED index 67) in red at 50%
-            RGB_MATRIX_INDICATOR_SET_COLOR(27, 127, 0, 0);
-            RGB_MATRIX_INDICATOR_SET_COLOR(67, 127, 0, 0);
+            rgb_matrix_set_color_all(0, 127, 127);
+            // F (index 27) and J (index 68) in red
+            // rgb_matrix_set_color(27, 127, 0, 0);
+            // rgb_matrix_set_color(68, 127, 0, 0);
             break;
         case WIN_BASE:
-            for (uint8_t i = led_min; i < led_max; i++) {
-                RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 127, 0);
-            }
+            rgb_matrix_set_color_all(0, 127, 0);
             // F and J in red
-            RGB_MATRIX_INDICATOR_SET_COLOR(27, 127, 0, 0);
-            RGB_MATRIX_INDICATOR_SET_COLOR(67, 127, 0, 0);
+            // rgb_matrix_set_color(27, 127, 0, 0);
+            // rgb_matrix_set_color(68, 127, 0, 0);
             break;
-        case NAV:
-            // Highlight Vim arrows in red
-            RGB_MATRIX_INDICATOR_SET_COLOR(81, 255, 0, 0); // Up
-            RGB_MATRIX_INDICATOR_SET_COLOR(86, 255, 0, 0); // Left
-            RGB_MATRIX_INDICATOR_SET_COLOR(87, 255, 0, 0); // Down
-            RGB_MATRIX_INDICATOR_SET_COLOR(88, 255, 0, 0); // Right
+        // case NAV:
+        //     rgb_matrix_set_color_all(0, 0, 0);
+            // arrows: Left(index86), Down(87), Up(81), Right(88)
+            // rgb_matrix_set_color(86, 127, 0, 0);
+            // rgb_matrix_set_color(87, 127, 0, 0);
+            // rgb_matrix_set_color(81, 127, 0, 0);
+            // rgb_matrix_set_color(88, 127, 0, 0);
             break;
         default:
-            break;
+            return true;  // allow other layers to use default effects
     }
-    return false;
+    return false;  // suppress default effects for handled layers
+}
+
+// DIP switch handler: switch between MAC_BASE and WIN_BASE
+bool dip_switch_update_user(uint8_t index, bool active) {
+    if (index == 0) {
+        layer_move(active ? WIN_BASE : MAC_BASE);
+    }
+    return true;
 }
 
 // Handle tap vs hold for custom keycodes

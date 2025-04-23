@@ -5,6 +5,9 @@ EXTRAKEY_ENABLE = yes # Needed for Hyper and Meh
 RGB_MATRIX_ENABLE = yes  # Enable RGB Matrix lighting
 VIA_ENABLE = yes  # Enable VIA configurator support
 
+# DIP switch support for Mac/Win layer switching
+DIP_SWITCH_ENABLE = yes
+
 # Optional settings for Mod-Tap behavior (uncomment one if desired)
 IGNORE_MOD_TAP_INTERRUPT = yes
 PERMISSIVE_HOLD = yes
