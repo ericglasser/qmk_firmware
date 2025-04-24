@@ -1,5 +1,5 @@
 ENCODER_MAP_ENABLE = yes
-TAP_DANCE_ENABLE = no # You might want this for more complex key behaviors, but not strictly needed for basic Mod-Tap
+TAP_DANCE_ENABLE = no  # Tap-dance disabled - using standard keycodes
 COMBO_ENABLE = no
 EXTRAKEY_ENABLE = yes # Needed for Hyper and Meh
 RGB_MATRIX_ENABLE = yes  # Enable RGB Matrix lighting
