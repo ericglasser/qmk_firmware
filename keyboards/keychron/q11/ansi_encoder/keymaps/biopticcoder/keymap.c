@@ -35,7 +35,17 @@ enum custom_keycodes {
     ZCTL,
     XCTL,
     CCTL,
-    VCTL
+    VCTL,
+    M1,
+    M2,
+    M3,
+    M4,
+    M5,
+    W1,
+    W2,
+    W3,
+    W4,
+    W5
 };
 
 // Timers for tap-hold detection
@@ -71,11 +81,11 @@ enum layers{
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_BASE] = LAYOUT_91_ansi(
         KC_MUTE,  KC_ESC,   KC_BRID,  KC_BRIU,  KC_MCTL,  KC_LPAD,  RM_VALD,   RM_VALU,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,    KC_VOLU,  KC_INS,   KC_DEL,   KC_MUTE,
-        _______,  KC_GRV,   KC_1,     KC_2,     KC_3,     KC_4,     KC_5,      KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,            KC_PGUP,
-        _______,  KC_TAB,   KC_Q,     KC_W,     E_HYPER,  R_MEH,    KC_T,      KC_Y,     U_MEH,    I_HYPER,  KC_O,     KC_P,     KC_LBRC,    KC_RBRC,  KC_BSLS,            KC_PGDN,
-        _______,  KC_CAPS,  A_CTL,    S_SFT,    D_ALT,    F_GUI,    KC_G,      KC_H,     J_GUI,    K_ALT,    L_SFT,    SCLN_CTL, KC_QUOT,              KC_ENT,             KC_HOME,
-        _______,  KC_LSFT,            Z_CMD,    X_CMD,    C_CMD,    V_CMD,    KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
-        _______,  KC_LCTL,  KC_LOPT,  KC_LCMD,  MO(MAC_FN),         SPC_NAV,                        KC_SPC,             KC_RCMD,  MO(MAC_FN), KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT),
+        M1,       KC_GRV,   KC_1,     KC_2,     KC_3,     KC_4,     KC_5,      KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,            KC_PGUP,
+        M2,       KC_TAB,   KC_Q,     KC_W,     E_HYPER,  R_MEH,    KC_T,      KC_Y,     U_MEH,    I_HYPER,  KC_O,     KC_P,     KC_LBRC,    KC_RBRC,  KC_BSLS,            KC_PGDN,
+        M3,       KC_CAPS,  A_CTL,    S_SFT,    D_ALT,    F_GUI,    KC_G,      KC_H,     J_GUI,    K_ALT,    L_SFT,    SCLN_CTL, KC_QUOT,              KC_ENT,             KC_HOME,
+        M4,       KC_LSFT,            Z_CMD,    X_CMD,    C_CMD,    V_CMD,    KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
+        M5,       KC_LCTL,  KC_LOPT,  KC_LCMD,  MO(MAC_FN),         SPC_NAV,                        KC_SPC,             KC_RCMD,  MO(MAC_FN), KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT),
 
     [MAC_FN] = LAYOUT_91_ansi(
         RM_TOGG,  _______,  KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,     KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,     KC_F12,   _______,  _______,  RM_TOGG,
@@ -87,11 +97,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [WIN_BASE] = LAYOUT_91_ansi(
         KC_MUTE,  KC_ESC,   KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,     KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,     KC_F12,   KC_INS,   KC_DEL,   KC_MUTE,
-        _______,  KC_GRV,   KC_1,     KC_2,     KC_3,     KC_4,     KC_5,      KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,            KC_PGUP,
-        _______,  KC_TAB,   KC_Q,     KC_W,     E_HYPER,  R_MEH,    KC_T,      KC_Y,     U_MEH,    I_HYPER,  KC_O,     KC_P,     KC_LBRC,    KC_RBRC,  KC_BSLS,            KC_PGDN,
-        _______,  KC_CAPS,  A_CTL,    S_SFT,    D_ALT,    F_GUI,    KC_G,      KC_H,     J_GUI,    K_ALT,    L_SFT,    SCLN_CTL, KC_QUOT,              KC_ENT,             KC_HOME,
-        _______,  KC_LSFT,            Z_CTL,    X_CTL,    C_CTL,    V_CTL,    KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
-        _______,  KC_LCTL,  KC_LWIN,  KC_LALT,  MO(WIN_FN),         SPC_NAV,                        KC_SPC,             KC_RALT,  MO(WIN_FN), KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT),
+        W1,       KC_GRV,   KC_1,     KC_2,     KC_3,     KC_4,     KC_5,      KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,            KC_PGUP,
+        W2,       KC_TAB,   KC_Q,     KC_W,     E_HYPER,  R_MEH,    KC_T,      KC_Y,     U_MEH,    I_HYPER,  KC_O,     KC_P,     KC_LBRC,    KC_RBRC,  KC_BSLS,            KC_PGDN,
+        W3,       KC_CAPS,  A_CTL,    S_SFT,    D_ALT,    F_GUI,    KC_G,      KC_H,     J_GUI,    K_ALT,    L_SFT,    SCLN_CTL, KC_QUOT,              KC_ENT,             KC_HOME,
+        W4,       KC_LSFT,            Z_CTL,    X_CTL,    C_CTL,    V_CTL,    KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
+        W5,       KC_LCTL,  KC_LWIN,  KC_LALT,  MO(WIN_FN),         SPC_NAV,                        KC_SPC,             KC_RALT,  MO(WIN_FN), KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT),
 
     [WIN_FN] = LAYOUT_91_ansi(
         RM_TOGG,  _______,  KC_BRID,  KC_BRIU,  KC_TASK,  KC_FLXP,  RM_VALD,   RM_VALU,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,    KC_VOLU,  _______,  _______,  RM_TOGG,
@@ -235,6 +245,83 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 } else {
                     tap_code(KC_V);
                 }
+            }
+            return false;
+        // Mac macros
+        case M1:
+            if (record->event.pressed) {
+                register_mods(MOD_BIT(KC_LALT));
+                tap_code(KC_SPC);
+                unregister_mods(MOD_BIT(KC_LALT));
+            }
+            return false;
+        case M2:
+            if (record->event.pressed) {
+                register_mods(MOD_BIT(KC_LCTL));
+                tap_code(KC_SPC);
+                unregister_mods(MOD_BIT(KC_LCTL));
+            }
+            return false;
+        case M3:
+            if (record->event.pressed) {
+                register_mods(MOD_BIT(KC_LALT));
+                tap_code(KC_ESC);
+                unregister_mods(MOD_BIT(KC_LALT));
+            }
+            return false;
+        case M4:
+            if (record->event.pressed) {
+                register_mods(MOD_BIT(KC_LGUI));
+                tap_code(KC_F5);
+                unregister_mods(MOD_BIT(KC_LGUI));
+            }
+            return false;
+        case M5:
+            if (record->event.pressed) {
+                register_mods(MOD_BIT(KC_LALT) | MOD_BIT(KC_LGUI));
+                tap_code(KC_K);
+                unregister_mods(MOD_BIT(KC_LALT) | MOD_BIT(KC_LGUI));
+            }
+            return false;
+        // Windows powertoys
+        case W1:
+            if (record->event.pressed) {
+                // Win+Shift+S: Snip & Sketch
+                register_mods(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
+                tap_code(KC_S);
+                unregister_mods(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
+            }
+            return false;
+        case W2:
+            if (record->event.pressed) {
+                // Win+G: Game Bar
+                register_mods(MOD_BIT(KC_LGUI));
+                tap_code(KC_G);
+                unregister_mods(MOD_BIT(KC_LGUI));
+            }
+            return false;
+        case W3:
+            if (record->event.pressed) {
+                // Win+; : Emoji panel
+                register_mods(MOD_BIT(KC_LGUI));
+                tap_code(KC_SCLN);
+                unregister_mods(MOD_BIT(KC_LGUI));
+            }
+            return false;
+        case W4:
+            if (record->event.pressed) {
+                // Win+H: Voice typing / Clipboard history
+                register_mods(MOD_BIT(KC_LGUI));
+                tap_code(KC_H);
+                unregister_mods(MOD_BIT(KC_LGUI));
+            }
+            return false;
+        case W5:
+            if (record->event.pressed) {
+                // Win+Z: FancyZones layout chooser
+                register_mods(MOD_BIT(KC_LGUI));
+                tap_code(KC_Z);
+                unregister_mods(MOD_BIT(KC_LGUI));
             }
             return false;
     }
