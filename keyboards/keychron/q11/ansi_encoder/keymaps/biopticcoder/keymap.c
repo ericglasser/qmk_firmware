@@ -120,40 +120,12 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 };
 #endif // ENCODER_MAP_ENABLE
 
-// Custom RGB Matrix layer colors (advanced)
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    uint8_t layer = biton32(layer_state);
-    switch (layer) {
-        case MAC_BASE:
-            rgb_matrix_set_color_all(0, 127, 127);
-            // F (index 27) and J (index 68) in red
-            // rgb_matrix_set_color(27, 127, 0, 0);
-            // rgb_matrix_set_color(68, 127, 0, 0);
-            break;
-        case WIN_BASE:
-            rgb_matrix_set_color_all(0, 127, 0);
-            // F and J in red
-            // rgb_matrix_set_color(27, 127, 0, 0);
-            // rgb_matrix_set_color(68, 127, 0, 0);
-            break;
-        // case NAV:
-        //     rgb_matrix_set_color_all(0, 0, 0);
-            // arrows: Left(index86), Down(87), Up(81), Right(88)
-            // rgb_matrix_set_color(86, 127, 0, 0);
-            // rgb_matrix_set_color(87, 127, 0, 0);
-            // rgb_matrix_set_color(81, 127, 0, 0);
-            // rgb_matrix_set_color(88, 127, 0, 0);
-            break;
-        default:
-            return true;  // allow other layers to use default effects
-    }
-    return false;  // suppress default effects for handled layers
-}
-
 // DIP switch handler: switch between MAC_BASE and WIN_BASE
 bool dip_switch_update_user(uint8_t index, bool active) {
     if (index == 0) {
-        layer_move(active ? WIN_BASE : MAC_BASE);
+        uint8_t target_layer = active ? WIN_BASE : MAC_BASE;
+        layer_move(target_layer); // Switch current layer
+        default_layer_set(1UL << target_layer); // Set default layer for startup
     }
     return true;
 }
