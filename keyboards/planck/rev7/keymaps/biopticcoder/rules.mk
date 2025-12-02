@@ -6,4 +6,5 @@ TAP_DANCE_ENABLE = no       # Changed tap dance to off
 CAPS_WORD_ENABLE = yes
 COMBO_ENABLE = yes            # Not using combos
 SRC += achordion.c
+RGB_MATRIX_ENABLE = yes       # Enable RGB Matrix
 COMMAND_ENABLE = yes       # Commands for debug and configuration

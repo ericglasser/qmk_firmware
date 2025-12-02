@@ -22,12 +22,15 @@
 
 enum planck_layers {
     _QWERTY,
-    _LOWER,
     _RAISE,
     _ADJUST,
+    _LOWER,
     _FN_KEYS,
-    _MEDIA // New Media and System Controls layer
+    _FAST,
+    _FAST_LEFT // Duplicate of FAST to distinguish Left Space for Combo
 };
+
+
 
 enum planck_keycodes {
     CUT_KEY = SAFE_RANGE,
@@ -61,38 +64,38 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |  -   |Undo-Z|Cut-X |Copy-C|Pst-V |   B  |   N  |   M  |   ,  |   .  |   /  |  =   |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Rep  |WinL  |WinR  |  [   |Enter |    Space    | Bksp |  ]   |AppSw |Mission| Rep |
+ * | Caps | Prev | Play | Next |Lower | Space| Fast |Func | Vol- | Vol+ | Mute | Rep  |
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT_planck_grid(
     QK_GESC,   KC_Q,         KC_W,         HYPR_T(KC_E), MEH_T(KC_R),       KC_T,             KC_Y,              MEH_T(KC_U),        HYPR_T(KC_I), KC_O,         KC_P,            KC_BACKSLASH,
     KC_TAB,  LCTL_T(KC_A), LSFT_T(KC_S), LALT_T(KC_D), LGUI_T(KC_F),      KC_G,             KC_H,              RGUI_T(KC_J),       LALT_T(KC_K), LSFT_T(KC_L), LCTL_T(KC_SCLN), KC_QUOT,
     KC_MINUS, UNDO_KEY,     CUT_KEY,      COPY_KEY,     PASTE_KEY,         KC_B,             KC_N,              KC_M,               KC_COMM,      KC_DOT,       KC_SLSH,         KC_EQUAL,
-    QK_REP,   WIN_LEFT,     WIN_RIGHT,    KC_LBRC,      LT(LOWER, KC_ENT), LT(FUNC, KC_SPC), LT(MEDIA, KC_SPC), LT(RAISE, KC_BSPC), KC_RBRC,      APP_SWITCH,   MISSION,         QK_REP
+    KC_CAPS,   KC_MPRV,      KC_MPLY,      KC_MNXT,      LT(LOWER, KC_ENT), LT(_FAST_LEFT, KC_SPC), LT(_FAST, KC_SPC), LT(FUNC, KC_BSPC), KC_VOLD,      KC_VOLU,      KC_MUTE,         QK_REP
 ),
 
-/* Raise
+/* Raise (Num/Sym)
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      |      |   7  |   8  |   9  |   /  | Del  |
+ * |      |      |      |      |      |      |      |   7  |   8  |   9  |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |   4  |   5  |   6  |   *  |      |
+ * |      |      |      |      |      |      |      |   4  |   5  |   6  |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |   1  |   2  |   3  |   -  |      |
+ * |      |      |      |      |      |      |      |   1  |   2  |   3  |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      | Lock |             |   .  |   0  |   =  |   +  |      |
+ * |      |      |      |      |      |             |   0  |   0  |   .  |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_RAISE] = LAYOUT_planck_grid(
-    _______, _______, _______, _______, _______,       _______, _______, KC_7,    KC_8,    KC_9,    KC_SLSH, KC_DEL,
-    _______, _______, _______, _______, _______,       _______, _______, KC_4,    KC_5,    KC_6,    KC_ASTR, _______,
-    KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE,       KC_TILD, _______, KC_1,    KC_2,    KC_3,    KC_MINS, _______,
-    _______, _______, _______, _______, QK_LAYER_LOCK, _______, _______, KC_DOT,  KC_0,    KC_EQL,  KC_PLUS, _______
+    _______, _______, _______, _______, _______, _______, _______, KC_7,    KC_8,    KC_9,    _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, KC_4,    KC_5,    KC_6,    _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, KC_1,    KC_2,    KC_3,    _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, KC_0,    KC_0,    KC_DOT,  _______, _______
 ),
 
 /* Adjust (Lower + Raise)
  *                      v------------------------RGB CONTROL--------------------v
  * ,-----------------------------------------------------------------------------------.
- * |      | Reset|Debug | RGB  |RGBMOD| HUE+ | HUE- | SAT+ | SAT- |BRGTH+|BRGTH-|  Del |
+ * |      | Reset|Debug | RGB  |RGBMOD| HUE+ | HUE- | SAT+ | SAT- |BRGTH+|BRGTH-|CapsWd|
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |MUSmod|Aud on|Audoff|AGnorm|AGswap|      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -108,25 +111,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 ),
 
-/* lower
+/* Lower (Nav/Mouse)
  * ,-----------------------------------------------------------------------------------.
- * |      | PgUp | Home |  Up  | End  |      |      |      |      |      |      |      |
+ * |      |      |      |      |      |      | Home | PgDn | PgUp | End  |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      | PgDn | Left | Down |Right |      |      |      |      |      |      |      |
+ * |      |      |      |      |      |      | Left | Down |  Up  |Right |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      | Tab  | Bksp | Del  | Enter|      |      |      |      |      |      |      |
+ * |      |      |      |      |      |      | PrevW| NextW|      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_LOWER] = LAYOUT_planck_grid(
-    _______, KC_PGUP, KC_HOME, KC_UP,   KC_END,  _______, _______, _______, _______, _______, _______, _______,
-    _______, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, _______, _______, _______,
-    _______, KC_TAB,  KC_BSPC, KC_DEL,  KC_ENT,  _______, _______, _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______, _______,
+    _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______,
+    _______, _______, _______, _______, _______, _______, LCTL(KC_LEFT), LCTL(KC_RGHT), _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 ),
 
-/* Function Key Layer
+/* Function/Media Layer
  * ,-----------------------------------------------------------------------------------.
  * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -144,25 +147,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 ),
 
-/* Media and System Control Layer
+/* Fast Number/Symbol Layer
  * ,-----------------------------------------------------------------------------------.
- * |Sleep | Wake |      |      |      |      |      |      |      |      |      |      |
+ * |   -  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  |   =  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      | Prev | Play | Next | Stop |      |      |VolDn |VolUp | Mute |BrightD|BrightU|
+ * |   [  |      |      |      |      |   \  |   `  |      |      |      |      |   ]  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |   _  |   !  |   @  |   #  |   $  |   %  |   ^  |   &  |   *  |   (  |   )  |   +  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
-[_MEDIA] = LAYOUT_planck_grid(
-    KC_SLEP, KC_WAKE, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, KC_MPRV, KC_MPLY, KC_MNXT, KC_MSTP, _______, _______, KC_VOLD, KC_VOLU, KC_MUTE, KC_BRID, KC_BRIU,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+[_FAST] = LAYOUT_planck_grid(
+    KC_MINUS, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0 , KC_EQL,
+    KC_LBRC, _______, _______, _______, _______, KC_BSLS, KC_GRV, _______, _______, _______, _______, KC_RCBR,
+    KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS, KC_PLUS,
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+),
+
+/* Fast Left (Duplicate for Combo) */
+[_FAST_LEFT] = LAYOUT_planck_grid(
+    KC_MINUS, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0 , KC_EQL,
+    KC_LBRC, _______, _______, _______, _______, KC_BSLS, KC_GRV, _______, _______, _______, _______, KC_RCBR,
+    KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS, KC_PLUS,
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 ),
 
 };
+
+
 
 #ifdef ENCODER_MAP_ENABLE
 /* Rotary Encoders
@@ -226,18 +239,44 @@ bool play_encoder_melody(uint8_t index, bool clockwise);
 enum combos {
   QW_ESC,
   OP_BSPC,
+  SPACE_COMBO
 };
 
 const uint16_t PROGMEM qw_combo[] = {KC_Q, KC_W, COMBO_END};
 const uint16_t PROGMEM op_combo[] = {KC_O, KC_P, COMBO_END};
+const uint16_t PROGMEM space_combo[] = {LT(_FAST_LEFT, KC_SPC), LT(_FAST, KC_SPC), COMBO_END};
 
 combo_t key_combos[] = {
   [QW_ESC] = COMBO(qw_combo, KC_ESC),
   [OP_BSPC] = COMBO(op_combo, KC_BSPC),
+  [SPACE_COMBO] = COMBO(space_combo, OSL(_FN_KEYS)),
 };
 
 void matrix_scan_user(void) {
   achordion_task();
+}
+
+bool rgb_matrix_indicators_user(void) {
+    switch (get_highest_layer(layer_state)) {
+        case _LOWER:
+            rgb_matrix_set_flags(LED_FLAG_ALL);
+            rgb_matrix_set_color_all(0, 255, 0); // Green
+            return false;
+        case _RAISE:
+            rgb_matrix_set_flags(LED_FLAG_ALL);
+            rgb_matrix_set_color_all(0, 0, 255); // Blue
+            return false;
+        case _ADJUST:
+            rgb_matrix_set_flags(LED_FLAG_ALL);
+            rgb_matrix_set_color_all(255, 0, 0); // Red
+            return false;
+        case _FAST:
+            rgb_matrix_set_flags(LED_FLAG_ALL);
+            rgb_matrix_set_color_all(255, 215, 0); // Gold
+            return false;
+        default:
+            return true; // Use default effect
+    }
 }
 
 bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,

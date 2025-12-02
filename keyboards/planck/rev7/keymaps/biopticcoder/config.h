@@ -26,7 +26,9 @@
 
 // Mod-Tap Configuration
 #define TAPPING_TERM 200
-#define TAPPING_FORCE_HOLD
+#define CAPS_WORD_IDLE_TIMEOUT 3000 // 3 seconds
+
+#define COMBO_ALLOW_ACTION_KEYS // Allow Mod-Tap/Layer-Tap in combose TAPPING_FORCE_HOLD
 #define PERMISSIVE_HOLD
 
 // Bootmagic Configuration
