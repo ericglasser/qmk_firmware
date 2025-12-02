@@ -29,12 +29,7 @@ enum planck_layers {
     _FAST
 };
 
-enum tap_dance_codes {
-    TD_UNDO,
-    TD_CUT,
-    TD_COPY,
-    TD_PASTE
-};
+
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
@@ -62,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_QWERTY] = LAYOUT_planck_grid(
     QK_GESC,  KC_Q,         KC_W,         HYPR_T(KC_E), MEH_T(KC_R),        KC_T,              KC_Y,              MEH_T(KC_U),        HYPR_T(KC_I), KC_O,         KC_P,            KC_BACKSLASH,
     KC_TAB,   LCTL_T(KC_A), LSFT_T(KC_S), LALT_T(KC_D), LGUI_T(KC_F),       KC_G,              KC_H,              RGUI_T(KC_J),       LALT_T(KC_K), LSFT_T(KC_L), LCTL_T(KC_SCLN), KC_QUOT,
-    KC_MINUS, TD(TD_UNDO),  TD(TD_CUT),   TD(TD_COPY),  TD(TD_PASTE),       KC_B,              KC_N,              KC_M,               KC_COMM,      KC_DOT,       KC_SLSH,         KC_EQUAL,
+    KC_MINUS, KC_Z,         KC_X,         KC_C,         KC_V,               KC_B,              KC_N,              KC_M,               KC_COMM,      KC_DOT,       KC_SLSH,         KC_EQUAL,
     KC_CAPS,  KC_MPRV,      KC_MPLY,      KC_MNXT,      LT(_LOWER, KC_ENT), LT(_FAST, KC_SPC), LT(_FAST, KC_SPC), LT(_FUNC, KC_BSPC), KC_VOLD,      KC_VOLU,      KC_MUTE,         QK_REP
 ),
 
@@ -178,134 +173,7 @@ combo_t key_combos[] = {
   [ENT_BSPC_COMBO] = COMBO(ent_bspc_combo, OSL(_FUNC)),
 };
 
-// Tap Dance Logic
-typedef struct {
-    bool is_press_action;
-    int state;
-} tap;
 
-enum {
-    SINGLE_TAP = 1,
-    SINGLE_HOLD = 2,
-    DOUBLE_TAP = 3,
-    DOUBLE_HOLD = 4,
-    DOUBLE_SINGLE_TAP = 5, //send two single taps
-    TRIPLE_TAP = 6,
-    TRIPLE_HOLD = 7,
-    MULTI_TAP = 8
-};
-
-int cur_dance(tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return SINGLE_TAP;
-        else return SINGLE_HOLD;
-    } else {
-        // For any other number of taps, if not held, treat as multi-tap
-        if (!state->pressed) return MULTI_TAP;
-        else return SINGLE_HOLD; // Treat hold as hold regardless of count? Or maybe just ignore?
-        // Let's stick to: Hold = Shortcut, Tap(s) = Letter(s)
-    }
-}
-
-static tap xtap_state = {
-    .is_press_action = true,
-    .state = 0
-};
-
-void x_finished(tap_dance_state_t *state, void *user_data) {
-    xtap_state.state = cur_dance(state);
-    switch (xtap_state.state) {
-        case SINGLE_TAP: register_code(KC_Z); break;
-        case SINGLE_HOLD: register_code(KC_LCTL); register_code(KC_Z); break;
-        case MULTI_TAP:
-            for (int i = 0; i < state->count; i++) {
-                tap_code(KC_Z);
-            }
-            break;
-    }
-}
-
-void x_reset(tap_dance_state_t *state, void *user_data) {
-    switch (xtap_state.state) {
-        case SINGLE_TAP: unregister_code(KC_Z); break;
-        case SINGLE_HOLD: unregister_code(KC_Z); unregister_code(KC_LCTL); break;
-        case MULTI_TAP: break; // tap_code handles register/unregister
-    }
-    xtap_state.state = 0;
-}
-
-void c_finished(tap_dance_state_t *state, void *user_data) {
-    xtap_state.state = cur_dance(state);
-    switch (xtap_state.state) {
-        case SINGLE_TAP: register_code(KC_X); break;
-        case SINGLE_HOLD: register_code(KC_LCTL); register_code(KC_X); break;
-        case MULTI_TAP:
-            for (int i = 0; i < state->count; i++) {
-                tap_code(KC_X);
-            }
-            break;
-    }
-}
-
-void c_reset(tap_dance_state_t *state, void *user_data) {
-    switch (xtap_state.state) {
-        case SINGLE_TAP: unregister_code(KC_X); break;
-        case SINGLE_HOLD: unregister_code(KC_X); unregister_code(KC_LCTL); break;
-        case MULTI_TAP: break;
-    }
-    xtap_state.state = 0;
-}
-
-void v_finished(tap_dance_state_t *state, void *user_data) {
-    xtap_state.state = cur_dance(state);
-    switch (xtap_state.state) {
-        case SINGLE_TAP: register_code(KC_C); break;
-        case SINGLE_HOLD: register_code(KC_LCTL); register_code(KC_C); break;
-        case MULTI_TAP:
-            for (int i = 0; i < state->count; i++) {
-                tap_code(KC_C);
-            }
-            break;
-    }
-}
-
-void v_reset(tap_dance_state_t *state, void *user_data) {
-    switch (xtap_state.state) {
-        case SINGLE_TAP: unregister_code(KC_C); break;
-        case SINGLE_HOLD: unregister_code(KC_C); unregister_code(KC_LCTL); break;
-        case MULTI_TAP: break;
-    }
-    xtap_state.state = 0;
-}
-
-void b_finished(tap_dance_state_t *state, void *user_data) {
-    xtap_state.state = cur_dance(state);
-    switch (xtap_state.state) {
-        case SINGLE_TAP: register_code(KC_V); break;
-        case SINGLE_HOLD: register_code(KC_LCTL); register_code(KC_V); break;
-        case MULTI_TAP:
-            for (int i = 0; i < state->count; i++) {
-                tap_code(KC_V);
-            }
-            break;
-    }
-}
-
-void b_reset(tap_dance_state_t *state, void *user_data) {
-    switch (xtap_state.state) {
-        case SINGLE_TAP: unregister_code(KC_V); break;
-        case SINGLE_HOLD: unregister_code(KC_V); unregister_code(KC_LCTL); break;
-        case MULTI_TAP: break;
-    }
-    xtap_state.state = 0;
-}
-
-tap_dance_action_t tap_dance_actions[] = {
-    [TD_UNDO] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, x_finished, x_reset),
-    [TD_CUT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, c_finished, c_reset),
-    [TD_COPY] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, v_finished, v_reset),
-    [TD_PASTE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, b_finished, b_reset),
-};
 
 void matrix_scan_user(void) {
   achordion_task();
@@ -320,31 +188,32 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
-    switch (get_highest_layer(state)) {
-        case _LOWER:
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(85, 255, 255); // Green
-            break;
-        case _RAISE:
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(170, 255, 255); // Blue
-            break;
-        case _ADJUST:
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(0, 255, 255); // Red
-            break;
-        case _FAST:
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(30, 255, 255); // Gold
-            break;
-        case _FUNC:
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(191, 255, 255); // Purple
-            break;
-        default:
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(0, 0, 0); // Off (Black)
-            break;
+
+    static uint8_t last_layer = 255;
+    uint8_t current_layer = get_highest_layer(state);
+
+    if (current_layer != last_layer) {
+        last_layer = current_layer;
+        switch (current_layer) {
+            case _LOWER:
+                rgb_matrix_sethsv_noeeprom(85, 255, 255); // Green
+                break;
+            case _RAISE:
+                rgb_matrix_sethsv_noeeprom(170, 255, 255); // Blue
+                break;
+            case _ADJUST:
+                rgb_matrix_sethsv_noeeprom(0, 255, 255); // Red
+                break;
+            case _FAST:
+                rgb_matrix_sethsv_noeeprom(30, 255, 255); // Gold
+                break;
+            case _FUNC:
+                rgb_matrix_sethsv_noeeprom(191, 255, 255); // Purple
+                break;
+            default:
+                rgb_matrix_sethsv_noeeprom(0, 0, 0); // Off (Black)
+                break;
+        }
     }
     return state;
 }
@@ -378,6 +247,8 @@ bool dip_switch_update_user(uint8_t index, bool active) {
 
 // Add this to detect OS changes via bootmagic or via command
 void keyboard_post_init_user(void) {
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    rgb_matrix_sethsv_noeeprom(0, 0, 0); // Default to Off
 #ifdef BOOTMAGIC_ENABLE
     // Check if we're connected to a Mac/iOS device
     is_mac = keymap_config.swap_lctl_lgui;

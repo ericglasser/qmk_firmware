@@ -32,10 +32,6 @@ Clean base layer with Home Row Mods and essential shortcuts.
     *   **Combo**: Press **Both Spacebars** to toggle `_FUNC` layer (One Shot).
 *   **Bottom Row**:
     *   **Left**: Dedicated Caps Lock (VoiceOver), Media Controls (Prev, Play, Next).
-    *   **Shortcuts**: `Undo`, `Cut`, `Copy`, `Paste` use **Tap Dance**:
-        *   **Tap**: Types `Z`, `X`, `C`, `V`.
-        *   **Double Tap**: Types `ZZ`, `XX`, `CC`, `VV`.
-        *   **Hold**: Sends `Ctrl+Z`, `Ctrl+X`, `Ctrl+C`, `Ctrl+V`.
     *   **Right**: Volume Controls, Repeat Key.
 
 ### Fast Layer (`_FAST`)
