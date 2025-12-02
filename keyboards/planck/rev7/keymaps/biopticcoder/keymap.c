@@ -16,6 +16,7 @@
 
 #include QMK_KEYBOARD_H
 #include "quantum.h"
+#include "achordion.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -25,12 +26,11 @@ enum planck_layers {
     _RAISE,
     _ADJUST,
     _FN_KEYS,
-    _MEDIA    // New Media and System Controls layer
+    _MEDIA // New Media and System Controls layer
 };
 
 enum planck_keycodes {
-    BACKLIT = QK_KB,
-    CUT_KEY,
+    CUT_KEY = SAFE_RANGE,
     COPY_KEY,
     PASTE_KEY,
     UNDO_KEY,
@@ -42,23 +42,22 @@ enum planck_keycodes {
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
-#define FUNC MO(_FN_KEYS)  // One-shot layer toggle for Fn layer
+#define FUNC MO(_FN_KEYS) // One-shot layer toggle for Fn layer
 #define MEDIA MO(_MEDIA)  // One-shot layer toggle for Media layer
 
-bool is_mac = false;  // Track if we're connected to a Mac/iOS device
+bool is_mac = false; // Track if we're connected to a Mac/iOS device
 
 // Custom mod-tap macro that sends both modifier and key when held
-#define CUSTOM_MT(key, mod) \
-    (QK_MOD_TAP | (((mod) & 0xF) << 8) | ((key) & 0xFF))
+#define CUSTOM_MT(key, mod) (QK_MOD_TAP | (((mod) & 0xF) << 8) | ((key) & 0xFF))
 
 /* clang-format off */
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Qwerty
  * ,-----------------------------------------------------------------------------------.
- * | Tab  |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  |  \   |
+ * | GESC |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  |  \   |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | GESC |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |  '   |
+ * | Tab  |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |  '   |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |  -   |Undo-Z|Cut-X |Copy-C|Pst-V |   B  |   N  |   M  |   ,  |   .  |   /  |  =   |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -66,8 +65,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT_planck_grid(
-    KC_TAB,   KC_Q,         KC_W,         HYPR_T(KC_E), MEH_T(KC_R),       KC_T,             KC_Y,              MEH_T(KC_U),        HYPR_T(KC_I), KC_O,         KC_P,            KC_BACKSLASH,
-    QK_GESC,  LCTL_T(KC_A), LSFT_T(KC_S), LALT_T(KC_D), LGUI_T(KC_F),      KC_G,             KC_H,              RGUI_T(KC_J),       LALT_T(KC_K), LSFT_T(KC_L), LCTL_T(KC_SCLN), KC_QUOT,
+    QK_GESC,   KC_Q,         KC_W,         HYPR_T(KC_E), MEH_T(KC_R),       KC_T,             KC_Y,              MEH_T(KC_U),        HYPR_T(KC_I), KC_O,         KC_P,            KC_BACKSLASH,
+    KC_TAB,  LCTL_T(KC_A), LSFT_T(KC_S), LALT_T(KC_D), LGUI_T(KC_F),      KC_G,             KC_H,              RGUI_T(KC_J),       LALT_T(KC_K), LSFT_T(KC_L), LCTL_T(KC_SCLN), KC_QUOT,
     KC_MINUS, UNDO_KEY,     CUT_KEY,      COPY_KEY,     PASTE_KEY,         KC_B,             KC_N,              KC_M,               KC_COMM,      KC_DOT,       KC_SLSH,         KC_EQUAL,
     QK_REP,   WIN_LEFT,     WIN_RIGHT,    KC_LBRC,      LT(LOWER, KC_ENT), LT(FUNC, KC_SPC), LT(MEDIA, KC_SPC), LT(RAISE, KC_BSPC), KC_RBRC,      APP_SWITCH,   MISSION,         QK_REP
 ),
@@ -86,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_RAISE] = LAYOUT_planck_grid(
     _______, _______, _______, _______, _______,       _______, _______, KC_7,    KC_8,    KC_9,    KC_SLSH, KC_DEL,
     _______, _______, _______, _______, _______,       _______, _______, KC_4,    KC_5,    KC_6,    KC_ASTR, _______,
-    _______, _______, _______, _______, _______,       _______, _______, KC_1,    KC_2,    KC_3,    KC_MINS, _______,
+    KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE,       KC_TILD, _______, KC_1,    KC_2,    KC_3,    KC_MINS, _______,
     _______, _______, _______, _______, QK_LAYER_LOCK, _______, _______, KC_DOT,  KC_0,    KC_EQL,  KC_PLUS, _______
 ),
 
@@ -103,7 +102,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_ADJUST] = LAYOUT_planck_grid(
-    _______, QK_BOOT, DB_TOGG, UG_TOGG, UG_NEXT, UG_HUEU, UG_HUED, UG_SATU, UG_SATD, UG_SPDU, UG_SPDD, KC_DEL ,
+    _______, QK_BOOT, DB_TOGG, UG_TOGG, UG_NEXT, UG_HUEU, UG_HUED, UG_SATU, UG_SATD, UG_SPDU, UG_SPDD, CW_TOGG ,
     _______, EE_CLR,  MU_NEXT, AU_ON,   AU_OFF,  AG_NORM, AG_SWAP, _______, _______, _______, _______,  _______,
     _______, AU_PREV, AU_NEXT, MU_ON,   MU_OFF,  MI_ON,   MI_OFF,  _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
@@ -224,79 +223,99 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 
 bool play_encoder_melody(uint8_t index, bool clockwise);
 
+enum combos {
+  QW_ESC,
+  OP_BSPC,
+};
+
+const uint16_t PROGMEM qw_combo[] = {KC_Q, KC_W, COMBO_END};
+const uint16_t PROGMEM op_combo[] = {KC_O, KC_P, COMBO_END};
+
+combo_t key_combos[] = {
+  [QW_ESC] = COMBO(qw_combo, KC_ESC),
+  [OP_BSPC] = COMBO(op_combo, KC_BSPC),
+};
+
+void matrix_scan_user(void) {
+  achordion_task();
+}
+
+bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
+                     uint16_t other_keycode, keyrecord_t* other_record) {
+  return achordion_opposite_hands(tap_hold_record, other_record);
+}
+
 layer_state_t layer_state_set_user(layer_state_t state) {
     return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (!process_achordion(keycode, record)) { return false; }
+
 #ifdef ENCODER_MAP_ENABLE
     if (IS_ENCODEREVENT(record->event) && record->event.pressed) {
         play_encoder_melody(record->event.key.col, record->event.type == ENCODER_CCW_EVENT);
     }
 #endif
 
-    uint16_t mod_key = is_mac ? KC_LGUI : KC_LCTL;
-
     switch (keycode) {
         case UNDO_KEY:
+            if (record->event.pressed) {
+                if (record->tap.count && !record->tap.interrupted) {
+                    register_code16(KC_Z);
+                } else {
+                    register_code(KC_LCTL);
+                    register_code16(KC_Z);
+                }
+            } else {
+                unregister_code16(KC_Z);
+                unregister_code(KC_LCTL);
+            }
+            return false;
         case CUT_KEY:
+            if (record->event.pressed) {
+                if (record->tap.count && !record->tap.interrupted) {
+                    register_code16(KC_X);
+                } else {
+                    register_code(KC_LCTL);
+                    register_code16(KC_X);
+                }
+            } else {
+                unregister_code16(KC_X);
+                unregister_code(KC_LCTL);
+            }
+            return false;
         case COPY_KEY:
+            if (record->event.pressed) {
+                if (record->tap.count && !record->tap.interrupted) {
+                    register_code16(KC_C);
+                } else {
+                    register_code(KC_LCTL);
+                    register_code16(KC_C);
+                }
+            } else {
+                unregister_code16(KC_C);
+                unregister_code(KC_LCTL);
+            }
+            return false;
         case PASTE_KEY:
             if (record->event.pressed) {
                 if (record->tap.count && !record->tap.interrupted) {
-                    // Handle tap action
-                    switch (keycode) {
-                        case UNDO_KEY:
-                            register_code16(KC_Z);
-                            break;
-                        case CUT_KEY:
-                            register_code16(KC_X);
-                            break;
-                        case COPY_KEY:
-                            register_code16(KC_C);
-                            break;
-                        case PASTE_KEY:
-                            register_code16(KC_V);
-                            break;
-                    }
+                    register_code16(KC_V);
                 } else {
-                    // Handle hold action (modifier + key)
-                    register_code(mod_key);
-                    switch (keycode) {
-                        case UNDO_KEY:
-                            register_code16(KC_Z);
-                            break;
-                        case CUT_KEY:
-                            register_code16(KC_X);
-                            break;
-                        case COPY_KEY:
-                            register_code16(KC_C);
-                            break;
-                        case PASTE_KEY:
-                            register_code16(KC_V);
-                            break;
-                    }
+                    register_code(KC_LCTL);
+                    register_code16(KC_V);
                 }
             } else {
-                // Unregister codes
-                unregister_code16(KC_Z);
-                unregister_code16(KC_X);
-                unregister_code16(KC_C);
                 unregister_code16(KC_V);
-                unregister_code(mod_key);
+                unregister_code(KC_LCTL);
             }
             return false;
-        case BACKLIT:
-            if (record->event.pressed) {
-                register_code(KC_RSFT);
-            } else {
-                unregister_code(KC_RSFT);
-            }
-            return false;
+
         case WIN_LEFT:
             if (record->event.pressed) {
                 if (is_mac) {
-                    register_code(KC_LCTL);
+                    register_code(KC_LGUI); // Sends Control
                     register_code(KC_LEFT);
                 } else {
                     register_code(KC_LCTL);
@@ -305,7 +324,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             } else {
                 if (is_mac) {
-                    unregister_code(KC_LCTL);
+                    unregister_code(KC_LGUI);
                     unregister_code(KC_LEFT);
                 } else {
                     unregister_code(KC_LCTL);
@@ -317,7 +336,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case WIN_RIGHT:
             if (record->event.pressed) {
                 if (is_mac) {
-                    register_code(KC_LCTL);
+                    register_code(KC_LGUI); // Sends Control
                     register_code(KC_RGHT);
                 } else {
                     register_code(KC_LCTL);
@@ -326,7 +345,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             } else {
                 if (is_mac) {
-                    unregister_code(KC_LCTL);
+                    unregister_code(KC_LGUI);
                     unregister_code(KC_RGHT);
                 } else {
                     unregister_code(KC_LCTL);
@@ -338,7 +357,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case APP_SWITCH:
             if (record->event.pressed) {
                 if (is_mac) {
-                    register_code(KC_LGUI);
+                    register_code(KC_LCTL); // Sends Command
                     register_code(KC_TAB);
                 } else {
                     register_code(KC_LALT);
@@ -346,7 +365,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             } else {
                 if (is_mac) {
-                    unregister_code(KC_LGUI);
+                    unregister_code(KC_LCTL);
                     unregister_code(KC_TAB);
                 } else {
                     unregister_code(KC_LALT);
@@ -357,7 +376,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case MISSION:
             if (record->event.pressed) {
                 if (is_mac) {
-                    register_code(KC_LCTL);
+                    register_code(KC_LGUI); // Sends Control
                     register_code(KC_UP);
                 } else {
                     register_code(KC_LGUI);
@@ -365,7 +384,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             } else {
                 if (is_mac) {
-                    unregister_code(KC_LCTL);
+                    unregister_code(KC_LGUI);
                     unregister_code(KC_UP);
                 } else {
                     unregister_code(KC_LGUI);
@@ -407,7 +426,7 @@ float melody[8][2][2] = {
 deferred_token tokens[8];
 
 uint32_t reset_note(uint32_t trigger_time, void *note) {
-    *(float*)note = 440.0f;
+    *(float *)note = 440.0f;
     return 0;
 }
 
@@ -445,7 +464,7 @@ bool dip_switch_update_user(uint8_t index, bool active) {
                     keymap_config.swap_lctl_lgui = false;
                     keymap_config.swap_rctl_rgui = false;
                 }
-                eeconfig_update_keymap(keymap_config.raw);
+                eeconfig_update_keymap(&keymap_config);
             }
             break;
     }
@@ -454,8 +473,8 @@ bool dip_switch_update_user(uint8_t index, bool active) {
 
 // Add this to detect OS changes via bootmagic or via command
 void keyboard_post_init_user(void) {
-    #ifdef BOOTMAGIC_ENABLE
+#ifdef BOOTMAGIC_ENABLE
     // Check if we're connected to a Mac/iOS device
     is_mac = keymap_config.swap_lctl_lgui;
-    #endif
+#endif
 }
