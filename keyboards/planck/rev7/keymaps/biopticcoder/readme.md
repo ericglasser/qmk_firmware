@@ -19,12 +19,23 @@ Clean base layer with Home Row Mods and essential shortcuts.
 `-----------------------------------------------------------------------------------'
 ```
 *   **Home Row Mods**: A/S/D/F (Left) and J/K/L/; (Right) act as Ctrl/Shift/Alt/Gui when held.
+## RGB Lighting
+*   **Base Layer**: Off.
+*   **Nav Layer**: Green.
+*   **Num Layer**: Blue.
+*   **Fast Layer**: Gold.
+*   **Func Layer**: Purple.
+*   **Adjust Layer**: Red.
 *   **Thumbs**:
-    *   **Left Space**: Tap for Space, Hold for `_FUNC` layer.
-    *   **Right Space**: Tap for Space, Hold for `_FAST` layer.
+    *   **Combo**: Pressing **Enter** (Left Thumb) + **Backspace** (Right Thumb) toggles the `_FUNC` layer.
+    *   **Left Space**: Standard Space key.
     *   **Combo**: Press **Both Spacebars** to toggle `_FUNC` layer (One Shot).
 *   **Bottom Row**:
     *   **Left**: Dedicated Caps Lock (VoiceOver), Media Controls (Prev, Play, Next).
+    *   **Shortcuts**: `Undo`, `Cut`, `Copy`, `Paste` use **Tap Dance**:
+        *   **Tap**: Types `Z`, `X`, `C`, `V`.
+        *   **Double Tap**: Types `ZZ`, `XX`, `CC`, `VV`.
+        *   **Hold**: Sends `Ctrl+Z`, `Ctrl+X`, `Ctrl+C`, `Ctrl+V`.
     *   **Right**: Volume Controls, Repeat Key.
 
 ### Fast Layer (`_FAST`)
@@ -78,8 +89,12 @@ Standard Numpad for data entry.
 ```
 *   **Right Hand**: Numpad centered on `K` (5).
 
-### Function Layer (`_FN_KEYS`)
-F-keys and Media.
+### Function Layer (`_FUNC`)
+    *   **Left Hand Numpad Style**:
+        *   Top Row: `F1`, `F2`, `F3`.
+        *   Home Row: `F4`, `F5`, `F6`.
+        *   Bottom Row: `F7`, `F8`, `F9`.
+        *   Row 4: `F10`, `F11`, `F12`.
 
 *   **Top Row**: F1 - F12.
 *   **Media**: `Prev` (H), `Play` (J), `Next` (K), `Stop` (M).

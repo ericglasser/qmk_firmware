@@ -22,31 +22,23 @@
 
 enum planck_layers {
     _QWERTY,
+    _LOWER,
     _RAISE,
     _ADJUST,
-    _LOWER,
-    _FN_KEYS,
-    _FAST,
-    _FAST_LEFT // Duplicate of FAST to distinguish Left Space for Combo
+    _FUNC,
+    _FAST
 };
 
-
-
-enum planck_keycodes {
-    CUT_KEY = SAFE_RANGE,
-    COPY_KEY,
-    PASTE_KEY,
-    UNDO_KEY,
-    WIN_LEFT,   // Window to left half
-    WIN_RIGHT,  // Window to right half
-    APP_SWITCH, // App switcher
-    MISSION     // Mission Control/Task View
+enum tap_dance_codes {
+    TD_UNDO,
+    TD_CUT,
+    TD_COPY,
+    TD_PASTE
 };
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
-#define FUNC MO(_FN_KEYS) // One-shot layer toggle for Fn layer
-#define MEDIA MO(_MEDIA)  // One-shot layer toggle for Media layer
+#define FUNC MO(_FUNC) // One-shot layer toggle for Fn layer
 
 bool is_mac = false; // Track if we're connected to a Mac/iOS device
 
@@ -68,10 +60,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT_planck_grid(
-    QK_GESC,   KC_Q,         KC_W,         HYPR_T(KC_E), MEH_T(KC_R),       KC_T,             KC_Y,              MEH_T(KC_U),        HYPR_T(KC_I), KC_O,         KC_P,            KC_BACKSLASH,
-    KC_TAB,  LCTL_T(KC_A), LSFT_T(KC_S), LALT_T(KC_D), LGUI_T(KC_F),      KC_G,             KC_H,              RGUI_T(KC_J),       LALT_T(KC_K), LSFT_T(KC_L), LCTL_T(KC_SCLN), KC_QUOT,
-    KC_MINUS, UNDO_KEY,     CUT_KEY,      COPY_KEY,     PASTE_KEY,         KC_B,             KC_N,              KC_M,               KC_COMM,      KC_DOT,       KC_SLSH,         KC_EQUAL,
-    KC_CAPS,   KC_MPRV,      KC_MPLY,      KC_MNXT,      LT(LOWER, KC_ENT), LT(_FAST_LEFT, KC_SPC), LT(_FAST, KC_SPC), LT(FUNC, KC_BSPC), KC_VOLD,      KC_VOLU,      KC_MUTE,         QK_REP
+    QK_GESC,  KC_Q,         KC_W,         HYPR_T(KC_E), MEH_T(KC_R),        KC_T,              KC_Y,              MEH_T(KC_U),        HYPR_T(KC_I), KC_O,         KC_P,            KC_BACKSLASH,
+    KC_TAB,   LCTL_T(KC_A), LSFT_T(KC_S), LALT_T(KC_D), LGUI_T(KC_F),       KC_G,              KC_H,              RGUI_T(KC_J),       LALT_T(KC_K), LSFT_T(KC_L), LCTL_T(KC_SCLN), KC_QUOT,
+    KC_MINUS, TD(TD_UNDO),  TD(TD_CUT),   TD(TD_COPY),  TD(TD_PASTE),       KC_B,              KC_N,              KC_M,               KC_COMM,      KC_DOT,       KC_SLSH,         KC_EQUAL,
+    KC_CAPS,  KC_MPRV,      KC_MPLY,      KC_MNXT,      LT(_LOWER, KC_ENT), LT(_FAST, KC_SPC), LT(_FAST, KC_SPC), LT(_FUNC, KC_BSPC), KC_VOLD,      KC_VOLU,      KC_MUTE,         QK_REP
 ),
 
 /* Raise (Num/Sym)
@@ -113,38 +105,38 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Lower (Nav/Mouse)
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      | Home | PgDn | PgUp | End  |      |      |
+ * |      |      |      |      |      |      |      | PgUp | Home |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |      | Left | Down |  Up  |Right |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |      | PrevW| NextW|      |      |      |      |
+ * |      |      |      |      |      |      |      | PgDn | End  |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_LOWER] = LAYOUT_planck_grid(
-    _______, _______, _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, KC_PGUP, KC_HOME, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______,
-    _______, _______, _______, _______, _______, _______, LCTL(KC_LEFT), LCTL(KC_RGHT), _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, KC_PGDN, KC_END,  _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 ),
 
-/* Function/Media Layer
+/* Function/Media Layer (Sequential on Left Hand)
  * ,-----------------------------------------------------------------------------------.
- * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
+ * |      |      |  F1  |  F2  |  F3  |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |  F4  |  F5  |  F6  |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |      |      |  F7  |  F8  |  F9  |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |             |      |      |      |      |      |
+ * |      |      |  F10 |  F11 |  F12 |             |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
-[_FN_KEYS] = LAYOUT_planck_grid(
-    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+[_FUNC] = LAYOUT_planck_grid(
+    _______, _______, KC_F1,   KC_F2,   KC_F3,   _______, _______, _______, _______, _______, _______, _______,
+    _______, _______, KC_F4,   KC_F5,   KC_F6,   _______, _______, _______, _______, _______, _______, _______,
+    _______, _______, KC_F7,   KC_F8,   KC_F9,   _______, _______, _______, _______, _______, _______, _______,
+    _______, _______, KC_F10,  KC_F11,  KC_F12,  _______, _______, _______, _______, _______, _______, _______
 ),
 
 /* Fast Number/Symbol Layer
@@ -165,119 +157,161 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 ),
 
-/* Fast Left (Duplicate for Combo) */
-[_FAST_LEFT] = LAYOUT_planck_grid(
-    KC_MINUS, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0 , KC_EQL,
-    KC_LBRC, _______, _______, _______, _______, KC_BSLS, KC_GRV, _______, _______, _______, _______, KC_RCBR,
-    KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS, KC_PLUS,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-),
 
 };
 
-
-
-#ifdef ENCODER_MAP_ENABLE
-/* Rotary Encoders
- */
-const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    /* Qwerty
-     *    v- (index) Clockwise / Counter Clockwise                        v- (index) Clockwise / Counter Clockwise
-     * ,---------------------------------------------------------------------------------------.
-     * | (0) Vol-    / Vol+    |   |   |   |   |   |   |   |   |   |   | (4) Vol-    / Vol+    |
-     * |-----------------------+---+---+---+---+---+---+---+---+---+---+-----------------------|
-     * | (1) KC_MNXT / KC_MPRV |   |   |   |   |   |   |   |   |   |   | (5) KC_MNXT / KC_MPRV |
-     * |-----------------------+---+---+---+---+---+---+---+---+---+---+-----------------------|
-     * | (2) KC_WBAK / KC_WFWD |   |   |   |   |   |   |   |   |   |   | (6) KC_SPC  / KC_ENT  |
-     * |-----------------------+---+---+---+---+---+---+---+---+---+---+-----------------------|
-     * | (3) KC_LEFT / KC_RGHT |   |   |   |   |       |   |   |   |   | (7) KC_DOWN / KC_UP   |
-     * `---------------------------------------------------------------------------------------'
-     */
-    [_QWERTY] = {
-        // LEFT SIDE (index 0 to 3)
-        ENCODER_CCW_CW(KC_VOLU, KC_VOLD),
-        ENCODER_CCW_CW(KC_MNXT, KC_MPRV),
-        ENCODER_CCW_CW(KC_WBAK, KC_WFWD),
-        ENCODER_CCW_CW(KC_LEFT, KC_RGHT),
-        // RIGHT SIDE (index 4 to 7)
-        ENCODER_CCW_CW(KC_VOLU, KC_VOLD),
-        ENCODER_CCW_CW(KC_MNXT, KC_MPRV),
-        ENCODER_CCW_CW(KC_SPC,  KC_ENT),
-        ENCODER_CCW_CW(KC_DOWN, KC_UP)
-    },
-
-    /* Adjust (Lower + Raise)
-     *    v- (index) Clockwise / Counter Clockwise                        v- (index) Clockwise / Counter Clockwise
-     * ,---------------------------------------------------------------------------------------.
-     * | (0) _______ / _______ |   |   |   |   |   |   |   |   |   |   | (4) _______ / _______ |
-     * |-----------------------+---+---+---+---+---+---+---+---+---+---+-----------------------|
-     * | (1) _______ / _______ |   |   |   |   |   |   |   |   |   |   | (5) _______ / _______ |
-     * |-----------------------+---+---+---+---+---+---+---+---+---+---+-----------------------|
-     * | (2) UG_NEXT / UG_PREV |   |   |   |   |   |   |   |   |   |   | (6) SAT- / SAT+       |
-     * |-----------------------+---+---+---+---+---+---+---+---+---+---+-----------------------|
-     * | (3) UG_VALD / UG_VALU |   |   |   |   |       |   |   |   |   | (7) HUE- / HUE+       |
-     * `---------------------------------------------------------------------------------------'
-     */
-    [_ADJUST] = {
-        // LEFT SIDE (index 0 to 3)
-        ENCODER_CCW_CW(_______, _______),
-        ENCODER_CCW_CW(_______, _______),
-        ENCODER_CCW_CW(UG_NEXT, UG_PREV),
-        ENCODER_CCW_CW(UG_VALD, UG_VALU),
-        // RIGHT SIDE (index 4 to 7)
-        ENCODER_CCW_CW(_______, _______),
-        ENCODER_CCW_CW(_______, _______),
-        ENCODER_CCW_CW(UG_SATD,  UG_SATU),
-        ENCODER_CCW_CW(UG_HUEU,  UG_HUED)
-    }
-};
-#endif
 /* clang-format on */
-
-bool play_encoder_melody(uint8_t index, bool clockwise);
 
 enum combos {
   QW_ESC,
   OP_BSPC,
-  SPACE_COMBO
+  ENT_BSPC_COMBO
 };
 
 const uint16_t PROGMEM qw_combo[] = {KC_Q, KC_W, COMBO_END};
 const uint16_t PROGMEM op_combo[] = {KC_O, KC_P, COMBO_END};
-const uint16_t PROGMEM space_combo[] = {LT(_FAST_LEFT, KC_SPC), LT(_FAST, KC_SPC), COMBO_END};
+const uint16_t PROGMEM ent_bspc_combo[] = {LT(_LOWER, KC_ENT), LT(_FUNC, KC_BSPC), COMBO_END};
 
 combo_t key_combos[] = {
   [QW_ESC] = COMBO(qw_combo, KC_ESC),
   [OP_BSPC] = COMBO(op_combo, KC_BSPC),
-  [SPACE_COMBO] = COMBO(space_combo, OSL(_FN_KEYS)),
+  [ENT_BSPC_COMBO] = COMBO(ent_bspc_combo, OSL(_FUNC)),
+};
+
+// Tap Dance Logic
+typedef struct {
+    bool is_press_action;
+    int state;
+} tap;
+
+enum {
+    SINGLE_TAP = 1,
+    SINGLE_HOLD = 2,
+    DOUBLE_TAP = 3,
+    DOUBLE_HOLD = 4,
+    DOUBLE_SINGLE_TAP = 5, //send two single taps
+    TRIPLE_TAP = 6,
+    TRIPLE_HOLD = 7,
+    MULTI_TAP = 8
+};
+
+int cur_dance(tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (state->interrupted || !state->pressed) return SINGLE_TAP;
+        else return SINGLE_HOLD;
+    } else {
+        // For any other number of taps, if not held, treat as multi-tap
+        if (!state->pressed) return MULTI_TAP;
+        else return SINGLE_HOLD; // Treat hold as hold regardless of count? Or maybe just ignore?
+        // Let's stick to: Hold = Shortcut, Tap(s) = Letter(s)
+    }
+}
+
+static tap xtap_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void x_finished(tap_dance_state_t *state, void *user_data) {
+    xtap_state.state = cur_dance(state);
+    switch (xtap_state.state) {
+        case SINGLE_TAP: register_code(KC_Z); break;
+        case SINGLE_HOLD: register_code(KC_LCTL); register_code(KC_Z); break;
+        case MULTI_TAP:
+            for (int i = 0; i < state->count; i++) {
+                tap_code(KC_Z);
+            }
+            break;
+    }
+}
+
+void x_reset(tap_dance_state_t *state, void *user_data) {
+    switch (xtap_state.state) {
+        case SINGLE_TAP: unregister_code(KC_Z); break;
+        case SINGLE_HOLD: unregister_code(KC_Z); unregister_code(KC_LCTL); break;
+        case MULTI_TAP: break; // tap_code handles register/unregister
+    }
+    xtap_state.state = 0;
+}
+
+void c_finished(tap_dance_state_t *state, void *user_data) {
+    xtap_state.state = cur_dance(state);
+    switch (xtap_state.state) {
+        case SINGLE_TAP: register_code(KC_X); break;
+        case SINGLE_HOLD: register_code(KC_LCTL); register_code(KC_X); break;
+        case MULTI_TAP:
+            for (int i = 0; i < state->count; i++) {
+                tap_code(KC_X);
+            }
+            break;
+    }
+}
+
+void c_reset(tap_dance_state_t *state, void *user_data) {
+    switch (xtap_state.state) {
+        case SINGLE_TAP: unregister_code(KC_X); break;
+        case SINGLE_HOLD: unregister_code(KC_X); unregister_code(KC_LCTL); break;
+        case MULTI_TAP: break;
+    }
+    xtap_state.state = 0;
+}
+
+void v_finished(tap_dance_state_t *state, void *user_data) {
+    xtap_state.state = cur_dance(state);
+    switch (xtap_state.state) {
+        case SINGLE_TAP: register_code(KC_C); break;
+        case SINGLE_HOLD: register_code(KC_LCTL); register_code(KC_C); break;
+        case MULTI_TAP:
+            for (int i = 0; i < state->count; i++) {
+                tap_code(KC_C);
+            }
+            break;
+    }
+}
+
+void v_reset(tap_dance_state_t *state, void *user_data) {
+    switch (xtap_state.state) {
+        case SINGLE_TAP: unregister_code(KC_C); break;
+        case SINGLE_HOLD: unregister_code(KC_C); unregister_code(KC_LCTL); break;
+        case MULTI_TAP: break;
+    }
+    xtap_state.state = 0;
+}
+
+void b_finished(tap_dance_state_t *state, void *user_data) {
+    xtap_state.state = cur_dance(state);
+    switch (xtap_state.state) {
+        case SINGLE_TAP: register_code(KC_V); break;
+        case SINGLE_HOLD: register_code(KC_LCTL); register_code(KC_V); break;
+        case MULTI_TAP:
+            for (int i = 0; i < state->count; i++) {
+                tap_code(KC_V);
+            }
+            break;
+    }
+}
+
+void b_reset(tap_dance_state_t *state, void *user_data) {
+    switch (xtap_state.state) {
+        case SINGLE_TAP: unregister_code(KC_V); break;
+        case SINGLE_HOLD: unregister_code(KC_V); unregister_code(KC_LCTL); break;
+        case MULTI_TAP: break;
+    }
+    xtap_state.state = 0;
+}
+
+tap_dance_action_t tap_dance_actions[] = {
+    [TD_UNDO] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, x_finished, x_reset),
+    [TD_CUT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, c_finished, c_reset),
+    [TD_COPY] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, v_finished, v_reset),
+    [TD_PASTE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, b_finished, b_reset),
 };
 
 void matrix_scan_user(void) {
   achordion_task();
 }
 
-bool rgb_matrix_indicators_user(void) {
-    switch (get_highest_layer(layer_state)) {
-        case _LOWER:
-            rgb_matrix_set_flags(LED_FLAG_ALL);
-            rgb_matrix_set_color_all(0, 255, 0); // Green
-            return false;
-        case _RAISE:
-            rgb_matrix_set_flags(LED_FLAG_ALL);
-            rgb_matrix_set_color_all(0, 0, 255); // Blue
-            return false;
-        case _ADJUST:
-            rgb_matrix_set_flags(LED_FLAG_ALL);
-            rgb_matrix_set_color_all(255, 0, 0); // Red
-            return false;
-        case _FAST:
-            rgb_matrix_set_flags(LED_FLAG_ALL);
-            rgb_matrix_set_color_all(255, 215, 0); // Gold
-            return false;
-        default:
-            return true; // Use default effect
-    }
-}
+
 
 bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
                      uint16_t other_keycode, keyrecord_t* other_record) {
@@ -285,207 +319,39 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+    state = update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+    switch (get_highest_layer(state)) {
+        case _LOWER:
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(85, 255, 255); // Green
+            break;
+        case _RAISE:
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(170, 255, 255); // Blue
+            break;
+        case _ADJUST:
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(0, 255, 255); // Red
+            break;
+        case _FAST:
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(30, 255, 255); // Gold
+            break;
+        case _FUNC:
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(191, 255, 255); // Purple
+            break;
+        default:
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(0, 0, 0); // Off (Black)
+            break;
+    }
+    return state;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_achordion(keycode, record)) { return false; }
-
-#ifdef ENCODER_MAP_ENABLE
-    if (IS_ENCODEREVENT(record->event) && record->event.pressed) {
-        play_encoder_melody(record->event.key.col, record->event.type == ENCODER_CCW_EVENT);
-    }
-#endif
-
-    switch (keycode) {
-        case UNDO_KEY:
-            if (record->event.pressed) {
-                if (record->tap.count && !record->tap.interrupted) {
-                    register_code16(KC_Z);
-                } else {
-                    register_code(KC_LCTL);
-                    register_code16(KC_Z);
-                }
-            } else {
-                unregister_code16(KC_Z);
-                unregister_code(KC_LCTL);
-            }
-            return false;
-        case CUT_KEY:
-            if (record->event.pressed) {
-                if (record->tap.count && !record->tap.interrupted) {
-                    register_code16(KC_X);
-                } else {
-                    register_code(KC_LCTL);
-                    register_code16(KC_X);
-                }
-            } else {
-                unregister_code16(KC_X);
-                unregister_code(KC_LCTL);
-            }
-            return false;
-        case COPY_KEY:
-            if (record->event.pressed) {
-                if (record->tap.count && !record->tap.interrupted) {
-                    register_code16(KC_C);
-                } else {
-                    register_code(KC_LCTL);
-                    register_code16(KC_C);
-                }
-            } else {
-                unregister_code16(KC_C);
-                unregister_code(KC_LCTL);
-            }
-            return false;
-        case PASTE_KEY:
-            if (record->event.pressed) {
-                if (record->tap.count && !record->tap.interrupted) {
-                    register_code16(KC_V);
-                } else {
-                    register_code(KC_LCTL);
-                    register_code16(KC_V);
-                }
-            } else {
-                unregister_code16(KC_V);
-                unregister_code(KC_LCTL);
-            }
-            return false;
-
-        case WIN_LEFT:
-            if (record->event.pressed) {
-                if (is_mac) {
-                    register_code(KC_LGUI); // Sends Control
-                    register_code(KC_LEFT);
-                } else {
-                    register_code(KC_LCTL);
-                    register_code(KC_LGUI);
-                    register_code(KC_LEFT);
-                }
-            } else {
-                if (is_mac) {
-                    unregister_code(KC_LGUI);
-                    unregister_code(KC_LEFT);
-                } else {
-                    unregister_code(KC_LCTL);
-                    unregister_code(KC_LGUI);
-                    unregister_code(KC_LEFT);
-                }
-            }
-            return false;
-        case WIN_RIGHT:
-            if (record->event.pressed) {
-                if (is_mac) {
-                    register_code(KC_LGUI); // Sends Control
-                    register_code(KC_RGHT);
-                } else {
-                    register_code(KC_LCTL);
-                    register_code(KC_LGUI);
-                    register_code(KC_RGHT);
-                }
-            } else {
-                if (is_mac) {
-                    unregister_code(KC_LGUI);
-                    unregister_code(KC_RGHT);
-                } else {
-                    unregister_code(KC_LCTL);
-                    unregister_code(KC_LGUI);
-                    unregister_code(KC_RGHT);
-                }
-            }
-            return false;
-        case APP_SWITCH:
-            if (record->event.pressed) {
-                if (is_mac) {
-                    register_code(KC_LCTL); // Sends Command
-                    register_code(KC_TAB);
-                } else {
-                    register_code(KC_LALT);
-                    register_code(KC_TAB);
-                }
-            } else {
-                if (is_mac) {
-                    unregister_code(KC_LCTL);
-                    unregister_code(KC_TAB);
-                } else {
-                    unregister_code(KC_LALT);
-                    unregister_code(KC_TAB);
-                }
-            }
-            return false;
-        case MISSION:
-            if (record->event.pressed) {
-                if (is_mac) {
-                    register_code(KC_LGUI); // Sends Control
-                    register_code(KC_UP);
-                } else {
-                    register_code(KC_LGUI);
-                    register_code(KC_TAB);
-                }
-            } else {
-                if (is_mac) {
-                    unregister_code(KC_LGUI);
-                    unregister_code(KC_UP);
-                } else {
-                    unregister_code(KC_LGUI);
-                    unregister_code(KC_TAB);
-                }
-            }
-            return false;
-    }
     return true;
-}
-
-/* clang-format off */
-float melody[8][2][2] = {
-    {{440.0f, 8}, {440.0f, 24}},
-    {{440.0f, 8}, {440.0f, 24}},
-    {{440.0f, 8}, {440.0f, 24}},
-    {{440.0f, 8}, {440.0f, 24}},
-    {{440.0f, 8}, {440.0f, 24}},
-    {{440.0f, 8}, {440.0f, 24}},
-    {{440.0f, 8}, {440.0f, 24}},
-    {{440.0f, 8}, {440.0f, 24}},
-};
-/* clang-format on */
-
-#define JUST_MINOR_THIRD 1.2
-#define JUST_MAJOR_THIRD 1.25
-#define JUST_PERFECT_FOURTH 1.33333333
-#define JUST_TRITONE 1.42222222
-#define JUST_PERFECT_FIFTH 1.33333333
-
-#define ET12_MINOR_SECOND 1.059463
-#define ET12_MAJOR_SECOND 1.122462
-#define ET12_MINOR_THIRD 1.189207
-#define ET12_MAJOR_THIRD 1.259921
-#define ET12_PERFECT_FOURTH 1.33484
-#define ET12_TRITONE 1.414214
-#define ET12_PERFECT_FIFTH 1.498307
-
-deferred_token tokens[8];
-
-uint32_t reset_note(uint32_t trigger_time, void *note) {
-    *(float *)note = 440.0f;
-    return 0;
-}
-
-bool play_encoder_melody(uint8_t index, bool clockwise) {
-    cancel_deferred_exec(tokens[index]);
-    if (clockwise) {
-        melody[index][1][0] = melody[index][1][0] * ET12_MINOR_SECOND;
-        melody[index][0][0] = melody[index][1][0] / ET12_PERFECT_FIFTH;
-        audio_play_melody(&melody[index], 2, false);
-    } else {
-        melody[index][1][0] = melody[index][1][0] / ET12_MINOR_SECOND;
-        melody[index][0][0] = melody[index][1][0] * ET12_TRITONE;
-        audio_play_melody(&melody[index], 2, false);
-    }
-    tokens[index] = defer_exec(1000, reset_note, &melody[index][1][0]);
-    return false;
-}
-
-bool encoder_update_user(uint8_t index, bool clockwise) {
-    return play_encoder_melody(index, clockwise);
 }
 
 bool dip_switch_update_user(uint8_t index, bool active) {
